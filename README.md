@@ -2,3 +2,4 @@
 An example API based on a payment service
 
 Project inspired by @InesIvanova
+      - https://github.com/InesIvanova 
