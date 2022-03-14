@@ -3,9 +3,9 @@
 Webapp for upload items and manage the payment.
 
 User's roles:
-  - Admin
-  - Approver
-  - User
+  - Admin: Delete, get all complaints
+  - Approver: Get complaints approve o reject them
+  - User / complainer: Get and create complaints
  
 
 
