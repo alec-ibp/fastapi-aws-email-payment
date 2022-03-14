@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from models import user
 from core.config import settings
 from db.init_db import database
+from models.enums import RoleType
 
 
 class AuthManager:
@@ -32,7 +33,7 @@ class CustomHttpBearer(HTTPBearer):
         result = await super().__call__(request)
 
         try:
-            payload = jwt.decode(result.credentials, settings.SECRET_KEY, algorithms=["SH256"])
+            payload = jwt.decode(result.credentials, settings.SECRET_KEY, algorithms=["HS256"])
 
             user_data = await database.fetch_one(user.select().where(user.c.id == payload["sub"]))
             request.state.user = user_data
@@ -43,4 +44,19 @@ class CustomHttpBearer(HTTPBearer):
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Token")
  
  
+def is_complainer(request: Request):
+    if not request.state.user["role"] == RoleType.complainer:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid auth")
+
+
+def is_approver(request: Request):
+    if not request.state.user["role"] == RoleType.approver:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid auth")
+
+
+def is_admin(request: Request):
+    if not request.state.user["role"] == RoleType.admin:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Invalid auth")
+
+
 oauth2_schema = CustomHttpBearer()

@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, status
 
 from managers.auth import oauth2_schema
 from managers.user import UserManager
-from schemas.user import UserLoginIn, UserRegisterIn
+from schemas.request.user import UserLoginIn, UserRegisterIn
 
 
 router = APIRouter(tags=["Authentication"])
