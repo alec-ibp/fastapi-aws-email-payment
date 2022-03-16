@@ -31,3 +31,10 @@ async def create_complaint(request: Request, complaint: ComplaintIn):
     user = request.state.user
     return await ComplaintManager.create(complaint.dict(), user)
     
+
+@router.delete(
+    path="/complaints/{complaint_id}",
+    dependencies=[Depends(oauth2_schema)],
+)
+async def delete_complaint(complaint_id: int):
+    await ComplaintManager.delete(complaint_id)
