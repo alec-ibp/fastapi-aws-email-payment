@@ -1,7 +1,6 @@
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, status
 
-from managers.auth import oauth2_schema
 from managers.user import UserManager
 from schemas.request.user import UserLoginIn, UserRegisterIn
 

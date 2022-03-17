@@ -20,7 +20,8 @@ class UserManager:
         try:
             _id: int = await database.execute(user.insert().values(**user_data))
         except UniqueViolationError:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="User email already exists!")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="User email already exists!")
 
         user_db: Dict = await database.fetch_one(user.select().where(user.c.id == _id))
         return AuthManager.encode_token(user_db)
@@ -28,11 +29,13 @@ class UserManager:
     @staticmethod
     async def login(user_data: Dict):
         user_db: Dict = await database.fetch_one(user.select().where(user.c.email == user_data["email"]))
-        
+
         if not user_db:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="incorrect email or password")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="incorrect email or password")
         if not pwd_context.verify(user_data["password"], user_db["password"]):
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="incorrect email or password")
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="incorrect email or password")
 
         return AuthManager.encode_token(user_db)
 
@@ -43,12 +46,13 @@ class UserManager:
     @staticmethod
     async def get_user_by_email(email: str) -> List[UserOut]:
         return await database.fetch_all(user.select().where((user.c.email == email)))
-    
+
     @staticmethod
     async def change_roll(role: RoleType, user_id: int) -> None:
         _id = await database.fetch_one(user.select().where(user.c.id == user_id))
-        
+
         if not _id:
-            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="User doesn't exists!")
-            
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="User doesn't exists!")
+
         await database.execute(user.update().where(user.c.id == user_id).values(role=role))

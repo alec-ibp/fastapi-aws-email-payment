@@ -10,5 +10,4 @@ class RoleType(enum.Enum):
 class ComplaintState(enum.Enum):
     pendding = "Pendding"
     approved = "Approved"
-    rejected = "Rejected "
-    
+    rejected = "Rejected"

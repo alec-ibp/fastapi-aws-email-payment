@@ -13,10 +13,10 @@ from models import RoleType
 @click.option("-e", "--email", type=str, required=True)
 @click.option("-p", "--phone", type=str, required=True)
 @click.option("-i", "--iban", type=str, required=True)
-@click.option("-pw", "--password" , type=str, required=True)
+@click.option("-pw", "--password", type=str, required=True)
 async def create_user(firstname: str, lastname: str, email: EmailStr, phone, iban, password):
-    user_data = {"firstname": firstname, "lastname": lastname, "email": email, 
-                    "phone": phone, "iban": iban, "password": password, "role": RoleType.admin}
+    user_data = {"firstname": firstname, "lastname": lastname, "email": email,
+                 "phone": phone, "iban": iban, "password": password, "role": RoleType.admin}
 
     await database.connect()
     await UserManager.register(user_data)

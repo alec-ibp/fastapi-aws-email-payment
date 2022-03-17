@@ -20,6 +20,7 @@ async def get_users(email: Optional[str] = None):
         return await UserManager.get_user_by_email(email)
     return await UserManager.get_all_users()
 
+
 @router.put(
     path="/users/{user_id}/make_admin",
     dependencies=[Depends(oauth2_schema), Depends(is_admin)],

@@ -8,7 +8,6 @@ from schemas.request.complaint import ComplaintIn
 from schemas.response.complaint import ComplaintOut
 
 
-
 router = APIRouter(tags=["Complaints"])
 
 
@@ -30,7 +29,7 @@ async def get_complaints(request: Request):
 async def create_complaint(request: Request, complaint: ComplaintIn):
     user = request.state.user
     return await ComplaintManager.create(complaint.dict(), user)
-    
+
 
 @router.delete(
     path="/complaints/{complaint_id}",

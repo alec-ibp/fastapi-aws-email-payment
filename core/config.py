@@ -11,4 +11,5 @@ class Settings(BaseSettings):
         case_sensitive = True
         env_file_encoding = "UTF-8"
 
+
 settings = Settings()

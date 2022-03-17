@@ -10,4 +10,3 @@ class BaseComplaint(BaseModel):
     description: str
     photo_url: str
     amount: float
-    
