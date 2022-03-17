@@ -1,13 +1,12 @@
+from models import RoleType
 from schemas.base import BaseUser
 
 
-class UserRegisterIn(BaseUser):
-    password: str
+class UserOut(BaseUser):
+    id: int
     firstname: str
     lastname: str
     phone: str
     iban: str
-
-
-class UserLoginIn(BaseUser):
-    password: str
+    role: RoleType
+    

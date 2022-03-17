@@ -1,4 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+
+
+class BaseUser(BaseModel):
+    email: EmailStr
 
 
 class BaseComplaint(BaseModel):
