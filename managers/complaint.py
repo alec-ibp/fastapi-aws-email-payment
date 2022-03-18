@@ -1,11 +1,18 @@
+import os
+import uuid
 from typing import Dict, List
 
-from models import RoleType, ComplaintState
-from models import complaint
+from constants import TEMP_FILE_FOLDER
 from db.init_db import database
 from schemas.request.complaint import ComplaintIn
 from schemas.response.complaint import ComplaintOut
+from models import complaint, RoleType, ComplaintState
+from services.s3 import s3Service
+from services.ses import SESService
+from utils.helpers import decode_photo
 
+s3 = s3Service()
+ses = SESService()
 
 class ComplaintManager:
     @staticmethod
@@ -23,6 +30,13 @@ class ComplaintManager:
     @staticmethod
     async def create(complaint_data: ComplaintIn, user: Dict):
         complaint_data["complainer_id"] = user["id"]
+        encoded_photo = complaint_data.pop("encoded_photo")
+        extension = complaint_data.pop("extension")
+        name = f"{uuid.uuid4()}.{extension}"
+        path = os.path.join(TEMP_FILE_FOLDER, name)
+        decode_photo(path, encoded_photo)
+        complaint_data["photo_url"] = s3.upload(path, name, extension)
+        os.remove(path)
         _id = await database.execute(complaint.insert().values(complaint_data))
         return await database.fetch_one(complaint.select().where(complaint.c.id == _id))
 
@@ -33,6 +47,7 @@ class ComplaintManager:
     @staticmethod
     async def approve(_id):
         await database.execute(complaint.update().where(complaint.c.id == _id).values(status=ComplaintState.approved))
+        ses.send_mail("Complaint approved", ["hzpulso@gmail.com"], "Congrats! your complaint was approved")
 
     @staticmethod
     async def reject(_id):
