@@ -1,4 +1,3 @@
-
 import sqlalchemy
 from models.enums import ComplaintState
 from db.init_db import metadata
